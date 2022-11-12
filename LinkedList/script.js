@@ -1,3 +1,5 @@
+"use strict";
+
 class Node {
   constructor(value) {
     this.value = value;
@@ -25,7 +27,7 @@ class LinkedList {
   prepend(value) {
     const node = new Node(value);
     if (this.head !== null) {
-      node.setNext = this.head;
+      node.setNext(this.head);
     } else {
       this.tail = node;
     }
@@ -38,10 +40,10 @@ class LinkedList {
     const node = new Node(value);
     if (this.head !== null) {
       let current = this.head;
-      while (current.getNext !== null) {
-        current = current.getNext;
+      while (current.getNext() !== null) {
+        current = current.getNext();
       }
-      current.setNext = node;
+      current.setNext(node);
     } else {
       this.head = node;
     }
@@ -50,24 +52,28 @@ class LinkedList {
   }
 
   at(index) {
+    if (index >= this.size) {
+      console.log("Index out of bounds.");
+      return;
+    }
     let current = this.head;
     let i = 0;
     while (i < index) {
-      current = current.getNext;
+      current = current.getNext();
       ++i;
     }
     return current.getValue();
   }
 
   insertAt(value, index) {
-    if (index >= this.size) {
+    if (index > this.size) {
       console.log("Index out of bounds.");
       return;
     }
     if (index === 0) {
       this.prepend(value);
       return;
-    } else if (index === this.size - 1) {
+    } else if (index === this.size) {
       this.append(value);
     } else {
       const node = new Node(value);
@@ -76,7 +82,7 @@ class LinkedList {
       let i = 0;
       while (i < index) {
         prev = current;
-        current = current.getNext;
+        current = current.getNext();
         ++i;
       }
       node.setNext(current);
@@ -111,13 +117,20 @@ class LinkedList {
       console.log("List is empty.");
       return;
     }
+    if (this.size === 1) {
+      const node = this.head;
+      this.head = null;
+      this.tail = null;
+      --this.size;
+      return node;
+    }
     let current = this.head;
-    let prev = null;
+    let prev = current;
     while (current.getNext() !== null) {
       prev = current;
       current = current.getNext();
     }
-    prev.setNext(null);
+    prev.next = null;
     this.tail = prev;
     --this.size;
     return current.getValue();
